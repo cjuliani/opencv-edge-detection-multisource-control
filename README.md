@@ -4,3 +4,6 @@ This demo was initially developed to detect fractures from a topography using hi
 
 *Make sure you use Python 3.x and OpenCV version 2.*
 
+| ![alt text](https://raw.githubusercontent.com/cjuliani/opencv-edge-detection-multisource-control/master/description.png) |
+|:--:|
+| *Base images for edge detection (left) and related control boards (middle). Final detections are shown in red and green edges (right).* 
