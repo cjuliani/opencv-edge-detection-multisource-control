@@ -2,9 +2,7 @@ import os,cv2
 import numpy as np
 
 class detector(object):
-    '''
-    Detecting edges from multi-source images with multi-control boards
-    '''
+    """Detecting edges from multi-source images with multi-control boards"""
     def __init__(self):
         self.stockImg = []      # image stock
         self.img_path = "./imgs/"
@@ -18,26 +16,14 @@ class detector(object):
         self.drawingList = []
         self.count = 0
         # changing trackbar values
-        self.a = {}
-        self.b = {}
-        self.c = {}
-        self.d = {}
-        self.e = {}
-        self.f = {}
+        self.a, self.b, self.c, self.d, self.e, self.f = {},{},{},{},{},{}
         # old trackbar values
-        self.a_old = {}
-        self.b_old = {}
-        self.c_old = {}
-        self.d_old = {}
-        self.e_old = {}
-        self.f_old = {}
+        self.a_old, self.b_old, self.c_old, self.d_old, self.e_old, self.f_old = {},{},{},{},{},{}
         # Get grayscale images
         self.get_grayscale()
 
     def get_grayscale(self):
-        '''
-        Transform RGB to GRAY
-        '''
+        """Transform RGB to GRAY"""
         l = 0
         while l < len(self.imgList):
             grayVal = cv2.cvtColor(self.imgList[l],cv2.COLOR_BGR2GRAY)
@@ -45,10 +31,7 @@ class detector(object):
             l += 1
 
     def main(self,*args):
-        '''
-        Main function
-        called by trackbars in created windows each time a modifier value is changed
-        '''
+        """Main function called by trackbars in created windows each time a modifier value is changed"""
         # create trackbars for images
         k = 0
         while k <= len(self.stockImg):
@@ -77,11 +60,8 @@ class detector(object):
         self.storedValues()             # store new values each time a change is applied to image(s)
 
     def checkFunction(self):
-        '''
-        Check if a value has change
-        i.e. what trackbar from which input window has been changed
-        by comparing new and old values (triggers corresponding function to be called)
-        '''
+        """Check if a value has changed i.e. what trackbar from which input window has been changed
+        by comparing new and old values (triggers corresponding function to be called)"""
         for i in range(len(self.stockImg)):
             if self.a[i] != self.a_old[i]:
                 self.contrast_callback()
@@ -99,15 +79,11 @@ class detector(object):
                 pass
 
     def contrast_callback(self):
-        '''
-        Contrast modifier
-        '''
+        """Contrast modifier"""
         self.blur_callback()
 
     def blur_callback(self):
-        '''
-        Blur modifier
-        '''
+        """Blur modifier"""
         # Parameters
         maxIntensity = 255.0 # depends on dtype of image data
         x = np.arange(maxIntensity)
@@ -126,15 +102,11 @@ class detector(object):
         self.thresholding()
 
     def thresh_Edges(self):
-        '''
-        Edges threshold modifier
-        '''
+        """Edges threshold modifier"""
         self.thresholding()
 
     def thresholding(self):
-        '''
-        Contouring function
-        '''    
+        """Contouring function"""    
         for i in range(len(self.blurList)):
             edges = cv2.Canny(self.blurList[i],self.c[i]*0.5,self.c[i]*1.5)
             #ret,threshImg = cv2.threshold(blurList[i],c[i],255,0)
@@ -143,18 +115,14 @@ class detector(object):
         self.ratio()
 
     def ratio_callback(self):
-        '''
-        Ratio modifier
-        '''
+        """Ratio modifier"""
         self.ratio()
 
     def angle_callback(self):
         self.ratio()
 
     def ratio(self):
-        '''
-        Drawing function
-        '''
+        """Drawing function"""
         for i in range(len(self.blurList)):
             drawing_edges = np.zeros(self.img0.shape,np.uint8)
             for cnt in self.contoursList[i]:
@@ -171,7 +139,6 @@ class detector(object):
                 if ratio2 > self.d[i] and -self.e[i] >= angle >= -self.f[i]:
                     cv2.drawContours(drawing_edges,[cnt],0,self.edgesColor[i],2)
             self.drawingList.append(drawing_edges)
-        #
         alpha = 1.0
         beta = 1.0
         gamma = 100
@@ -180,17 +147,13 @@ class detector(object):
         for i in range(1,len(self.blurList)):
             dst_ref += self.drawingList[i-1] * beta + self.drawingList[i] * beta + gamma
             imgEdges += cv2.addWeighted(self.drawingList[i-1], beta, self.drawingList[i], beta, 0, dst_ref)
-        #
         dst = self.imgRef*alpha + imgEdges*beta + gamma
         imgSuperimposed = cv2.addWeighted(self.imgRef, alpha, imgEdges, beta, 0, dst)
-        #
         self.drawingList = []
         self.img_show(imgSuperimposed)
     
     def storedValues(self):
-        '''
-        Store current values as old values
-        '''
+        """Store current values as old values"""
         k = 0
         while k <= len(self.stockImg): 
             self.a_old[k] = self.a[k]
@@ -238,7 +201,5 @@ class detector(object):
             cv2.createTrackbar('angle_max:','input{}'.format(i),angle_maxVal,angle_max_Max,self.main)
         # Initiate the main function
         self.main()
-        #
         if cv2.waitKey(0) == 27: # if you press ESC, it will close all windows
             cv2.destroyAllWindows()
-
