@@ -1,4 +1,4 @@
-# Edge detection from multi-source images with multi-control board
+# Multi-source edge detection with multi-control board
 
 This demo was developed to detect fractures from a topography using hill-shading effects and terrain attributes (e.g. slope). The algorithm can take into consideration multiple images so that edges detected can be controlled visually with control parameters e.g. contrast, bluring and edge sensitivity. Parameters can be modulated for every base image used in the detection.
 
